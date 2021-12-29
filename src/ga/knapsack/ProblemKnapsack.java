@@ -1,5 +1,7 @@
 package ga.knapsack;
 
+import java.util.Arrays;
+
 import ga.knapsack.interfaces.KnapsackInstance;
 import ga.ssGA.Individual;
 import ga.ssGA.Problem;
@@ -22,8 +24,30 @@ public class ProblemKnapsack extends Problem {
 
     @Override
     public double Evaluate(Individual indiv) {
-        double fitness=0.0;
-        // TODO: Calculating the fitness of the individual
+        double fitness = 0.0;
+        for (int j = 0; j < instance.getItems(); j++) {
+            if(indiv.get_allele(j) == 1) {
+                fitness += instance.getProfit(j);
+            }
+        }
+
+        double[] totalWeight = new double[(int) instance.getConstraints()];
+        int overWeightLimit = 0;
+
+        for (int i = 0; i < instance.getConstraints(); i++) {
+            for (int j = 0; j < instance.getItems(); j++) {
+                if(indiv.get_allele(j) == 1) {
+                    totalWeight[i] += instance.getWeight(i, j);
+                }
+            }
+            if(totalWeight[i] > instance.getRhs(i)) {
+                overWeightLimit++;
+            }
+        }
+
+        if(overWeightLimit > 0) {
+            fitness = 0.0;
+        }
 
         indiv.set_fitness(fitness);
         return fitness;

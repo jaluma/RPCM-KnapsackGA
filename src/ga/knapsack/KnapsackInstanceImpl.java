@@ -19,8 +19,8 @@ public class KnapsackInstanceImpl implements KnapsackInstance {
         this.rhs = rhs;
     }
 
-    public double getProfit(int i) {
-        return coefficients[i];
+    public double getProfit(int j) {
+        return coefficients[j];
     }
 
     public double getWeight(int i, int j) {

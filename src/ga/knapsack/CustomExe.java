@@ -16,24 +16,37 @@ import ga.ssGA.Problem;
 public class CustomExe {
   public static void main(String args[]) throws Exception {
     MKnap1Parser parser = new MKnap1Parser();
-    List<KnapsackInstance> instances = parser.parse(args.length > 0 ? args[0] : "resources/inputs/knapsack/mknap16.txt");
+    List<KnapsackInstance> instances = parser.parse(args.length > 0 ? args[0] : "resources/inputs/knapsack/mknap1.txt");
     if (instances == null) {
       System.out.println("Error: The file is not found, is empty or has an invalid format.");
       return;
     }
 
     for (KnapsackInstance instance : instances) {
-      // PARAMETERS KNAPSACK
-      int gn = 512; // Gene number
-      int gl = 1; // Gene length
-      int popsize = 512; // Population size
-      double pc = 0.8; // Crossover probability
-      double pm = 1.0 / (double) ((double) gn * (double) gl); // Mutation probability
-      double tf = (double) gn * gl; // Target fitness being sought
-      long MAX_ISTEPS = 50000;
-
       Problem problem; // The problem being solved
       problem = new ProblemKnapsack(instance);
+
+      // PARAMETERS KNAPSACK
+
+      // Gene number
+      int gn = (int) instance.getItems(); 
+      // Gene length
+      int gl = 1; 
+
+      // Population size
+      int popsize = 512; 
+
+      // Crossover probability
+      double pc = 0.8; 
+
+      // Mutation probability
+      double pm = 1.0 / (double) ((double) gn * (double) gl); 
+
+      // Target fitness being sought
+      double tf = instance.getOptimal(); 
+
+      // Maximum number of iterations
+      long MAX_ISTEPS = 50000;
 
       problem.set_geneN(gn);
       problem.set_geneL(gl);

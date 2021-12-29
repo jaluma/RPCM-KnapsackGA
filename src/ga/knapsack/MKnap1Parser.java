@@ -17,8 +17,7 @@ public class MKnap1Parser implements Parser<List<KnapsackInstance>> {
      *  The format of this data file is:
         number of test problems (K)
         then for each test problem k (k=1,...,K) in turn:
-            number of variables (n), number of constraints (m), optimal
-            solution value (zero if unavailable)
+            number of variables (n), number of constraints (m), optimal solution value (zero if unavailable)
             the coefficients p(j); j=1,...,n
             for each constraint i (i=1,...,m): the coefficients r(i,j); j=1,...,n
             the constraint right-hand sides b(i); i=1,...,m
@@ -45,7 +44,8 @@ public class MKnap1Parser implements Parser<List<KnapsackInstance>> {
             String[] firstLine = splitLine(data[currentLine]);
             long n = Long.parseLong(firstLine[0]);
             long m = Long.parseLong(firstLine[1]);
-            double optimalValue = firstLine.length >= 3 ?Double.parseDouble(firstLine[2]) : -1;  // If the optimal value is not available, it is set to -1
+            Double parsed = firstLine.length >= 3 ? tryParse(firstLine[2]) : null;
+            double optimalValue = parsed != null && parsed > 0 ? parsed : -1;  // If the optimal value is not available, it is set to -1
 
             currentLine++;
 
@@ -123,4 +123,11 @@ public class MKnap1Parser implements Parser<List<KnapsackInstance>> {
             .mapToDouble(Double::parseDouble).toArray();
     }
     
+    private Double tryParse(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 }

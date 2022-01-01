@@ -1,6 +1,7 @@
 package ga.benchmarks;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 public class BenchmarkData {
     private double[] config;
@@ -47,10 +48,16 @@ public class BenchmarkData {
 
     // Create a tabulated array string representation of the data
     public String[] toArray() {
+      String solution = "";
+      for(int i = 0; i < this.solution.length; i++) {
+        solution += this.solution[i];
+      }
+      
       return new String[] {
         String.valueOf(df.format(config[0])),
         String.valueOf(df.format(config[1])),
-        String.valueOf(df.format(fitness)),
+        String.valueOf(solution),
+        String.valueOf(fitness),
         String.valueOf(time),
         String.valueOf(iterations),
         String.valueOf(success)

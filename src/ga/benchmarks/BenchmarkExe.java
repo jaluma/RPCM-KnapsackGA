@@ -76,27 +76,28 @@ public class BenchmarkExe {
           problem.set_geneL(gl);
           problem.set_target_fitness(tf);
 
+          long startTime = System.nanoTime();
+
           Algorithm ga; // The ssGA being used
           ga = new Algorithm(problem, popsize, gn, gl, pc, pm);
 
-          long measuredTime = -1;
+          long elapsedTime = -1;
           long iterations = -1;
-          long startTime = System.currentTimeMillis();
 
           for (int step = 0; step < MAX_ISTEPS; step++) {
             ga.go_one_step();
 
             if ((problem.tf_known()) &&
                 (ga.get_solution()).get_fitness() >= problem.get_target_fitness()) {
-              measuredTime = System.currentTimeMillis() - startTime;
+              elapsedTime = System.nanoTime() - startTime;
               iterations = step;
               break;
             }
 
           }
 
-          if (measuredTime == -1) {
-            measuredTime = System.currentTimeMillis() - startTime;
+          if (elapsedTime == -1) {
+            elapsedTime = System.nanoTime() - startTime;
             iterations = MAX_ISTEPS;
           }
 
@@ -110,8 +111,8 @@ public class BenchmarkExe {
             new double[] { pc, pm },
             sol.get_fitness(),
             solution,
-            measuredTime,
-            iterations,
+            elapsedTime,
+            iterations + 1,
             iterations != MAX_ISTEPS
           );
         }
@@ -121,28 +122,22 @@ public class BenchmarkExe {
     String exportFile = "out/benchmark-%s.csv";
     for (int k = 0; k < instances.size(); k++) {
       String instanceName = name + (k + 1);
+      List<String[]> ret = new ArrayList<String[]>();
       for (int i = 0; i < exportData[k].length; i++) {
-        List<String[]> ret = new ArrayList<String[]>();
         for (int j = 0; j < exportData[k][i].length; j++) {
           BenchmarkData data = exportData[k][i][j];
           ret.add(data.toArray());
         }
-        String fileName = String.format(exportFile, instanceName);
-
-        // Create directory and file if not exists
-        File directory = new File(fileName).getParentFile();
-        if (!directory.exists()) {
-          directory.mkdirs();
-        }
-
-        saveCsvData(fileName, ret);
-
-        // try (PrintWriter writer = new PrintWriter(fileName, "UTF-8")) {
-        //   writer.println(convertToCSV(data.toArray()));
-        // } catch (IOException e) {
-        //   e.printStackTrace();
-        // }
       }
+      String fileName = String.format(exportFile, instanceName);
+
+      // Create directory and file if not exists
+      File directory = new File(fileName).getParentFile();
+      if (!directory.exists()) {
+        directory.mkdirs();
+      }
+
+      saveCsvData(fileName, ret);
     }
 
     System.out.println(String.format("Done. Results exported to out/benchmark-%s.csv", name));

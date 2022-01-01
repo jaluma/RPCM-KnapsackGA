@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class BenchmarkData {
+    private int iteration;
     private double[] config;
     private double fitness;
     private byte[] solution;
@@ -11,13 +12,18 @@ public class BenchmarkData {
     private long iterations;
     private boolean success;
 
-    public BenchmarkData(double[] config, double fitness, byte[] solution, long time, long iterations, boolean success) {
+    public BenchmarkData(int iteration, double[] config, double fitness, byte[] solution, long time, long iterations, boolean success) {
+      this.iteration = iteration;
       this.config = config;
       this.fitness = fitness;
       this.solution = solution;
       this.time = time;
       this.iterations = iterations;
       this.success = success;
+    }
+
+    public int getIteration() {
+      return iteration;
     }
 
     public double[] getConfig() {
